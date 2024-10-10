@@ -1,4 +1,5 @@
 import asyncio
+from pprint import pprint
 from random import randint, uniform
 from typing import NoReturn
 
@@ -15,5 +16,12 @@ async def start(tg_client: Client, proxy: str | None = None) -> NoReturn:
 
     while True:
         await pirateslot.login()
+
+        me = await pirateslot.get_me()
+        pprint(me)
+        logger.info(me)
+
+        await asyncio.sleep(5)
+        break
 
         ...
