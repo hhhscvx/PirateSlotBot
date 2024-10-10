@@ -31,8 +31,9 @@ class PirateSlot:
         resp_json = await resp.json()
         return resp_json
 
-    async def claim(self) -> tuple[bool, int]:
-        resp = await self.session.post(url='https://back.pirate-farm.ink/farming/complete')
+    async def claim(self, claim_id: int) -> tuple[bool, int]:
+        resp = await self.session.post(url='https://back.pirate-farm.ink/farming/complete',
+                                       json={'jobId': claim_id})
         resp_json: dict = await resp.json()
         success_claimed = resp_json.get('status') == 'completed'
         claimed_amount = resp_json.get('amount')  # str
