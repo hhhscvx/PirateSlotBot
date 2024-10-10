@@ -7,7 +7,8 @@ class Settings(BaseSettings):
     API_ID: int
     API_HASH: str
 
-    RANDOM_BET_COUNT: list[int] = [100, 150, 200, 500]
+    # RANDOM_BET_COUNT: list[int] = [100, 150, 200, 500]
+    RANDOM_BET_COUNT: list[int] = [500]
 
     SLEEP_BETWEEN_PLAY: list[float] = [3, 5]
     SLEEP_BY_LOW_PIR: list[float] = [1800, 2400]
