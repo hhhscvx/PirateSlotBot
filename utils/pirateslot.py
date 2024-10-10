@@ -58,6 +58,13 @@ class PirateSlot:
                                        json={'taskId': task_id})
         return (await resp.json()) if resp.status == HTTPStatus.CREATED else None
 
+    async def play_game(self, bet: int, currency: str = "pir") -> tuple[str, str]:
+        """Если reward = 0 - логировать что lose"""
+        resp = await self.session.post(url='https://back.pirate-farm.ink/tasks/completed',
+                                       json={'bet': f'{bet:.2f}', 'currency': currency})
+        resp_json = await resp.json()
+        return resp_json.get('reward'), resp_json.get('modifier')
+
     async def login(self) -> bool:
         await asyncio.sleep(uniform(*config.DELAY_CONN_ACCOUNT))
         query = await self.get_tg_web_data()

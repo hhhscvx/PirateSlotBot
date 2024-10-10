@@ -7,6 +7,9 @@ class Settings(BaseSettings):
     API_ID: int
     API_HASH: str
 
+    RANDOM_BET_COUNT: list[int] = [50, 70, 80, 99, 100, 150, 200, 500]
+    SLEEP_BETWEEN_PLAY: list[float] = [2.5, 4]
+
     USE_PROXY_FROM_FILE: bool = False  # True - if use proxy from file, False - if use proxy from accounts.json
     PROXY_PATH: str = "data/proxy.txt"
     PROXY_TYPE_TG: str = "socks5"  # proxy type for tg client. "socks4", "socks5" and "http" are supported
