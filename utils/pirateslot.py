@@ -55,13 +55,13 @@ class PirateSlot:
         return await resp.json()
 
     async def complete_task(self, task_id: int) -> dict:
-        resp = await self.session.post(url='https://back.pirate-farm.ink/tasks/completed',
+        resp = await self.session.post(url='https://back.pirate-farm.ink/tasks/complete',
                                        json={'taskId': task_id})
         return (await resp.json()) if resp.status == HTTPStatus.CREATED else None
 
     async def play_game(self, bet: int, currency: str = "pir") -> tuple[str, str]:
         """Если reward = 0 - логировать что lose"""
-        resp = await self.session.post(url='https://back.pirate-farm.ink/tasks/completed',
+        resp = await self.session.post(url='https://back.pirate-farm.ink/games/create-game',
                                        json={'bet': f'{bet:.2f}', 'currency': currency})
         resp_json = await resp.json()
         return resp_json.get('reward'), resp_json.get('modifier')
