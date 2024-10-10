@@ -48,6 +48,16 @@ class PirateSlot:
         resp = await self.session.get(url='https://back.pirate-farm.ink/farming/get-latest')
         return await resp.json()
 
+    async def task_list(self) -> list[dict[str, str | int | bool]]:
+        """Проходиться по каждому и если completed = false - выполнять"""
+        resp = await self.session.get(url='https://back.pirate-farm.ink/tasks/list')
+        return await resp.json()
+
+    async def complete_task(self, task_id: int) -> dict:
+        resp = await self.session.post(url='https://back.pirate-farm.ink/tasks/completed',
+                                       json={'taskId': task_id})
+        return (await resp.json()) if resp.status == HTTPStatus.CREATED else None
+
     async def login(self) -> bool:
         await asyncio.sleep(uniform(*config.DELAY_CONN_ACCOUNT))
         query = await self.get_tg_web_data()
