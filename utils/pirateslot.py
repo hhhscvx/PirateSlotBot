@@ -1,6 +1,7 @@
 import asyncio
 from random import uniform
 from urllib.parse import quote, unquote
+from http import HTTPStatus
 
 import aiohttp
 from aiohttp_socks import ProxyConnector
@@ -29,6 +30,23 @@ class PirateSlot:
         resp = await self.session.get(url='https://back.pirate-farm.ink/users/me')
         resp_json = await resp.json()
         return resp_json
+
+    async def claim(self) -> tuple[bool, int]:
+        resp = await self.session.post(url='https://back.pirate-farm.ink/farming/complete')
+        resp_json: dict = await resp.json()
+        success_claimed = resp_json.get('status') == 'completed'
+        claimed_amount = resp_json.get('amount')  # str
+        return success_claimed, claimed_amount
+
+    async def start(self) -> dict[str, str | int] | None:
+        """Если не None, то логировать что саксес старт"""
+        resp = await self.session.post(url='https://back.pirate-farm.ink/farming/start')
+        return (await resp.json()) if resp.status == HTTPStatus.CREATED else None
+
+    async def claim_info(self) -> dict[str, str | int]:
+        """клеймить когда «canClaimInSeconds» == 0 и status != completed"""
+        resp = await self.session.get(url='https://back.pirate-farm.ink/farming/get-latest')
+        return await resp.json()
 
     async def login(self) -> bool:
         await asyncio.sleep(uniform(*config.DELAY_CONN_ACCOUNT))
