@@ -36,21 +36,18 @@ class PirateSlot:
                                        json={'jobId': claim_id})
         resp_json: dict = await resp.json()
         success_claimed = resp_json.get('status') == 'completed'
-        claimed_amount = resp_json.get('amount')  # str
+        claimed_amount = resp_json.get('amount')
         return success_claimed, claimed_amount
 
     async def start(self) -> dict[str, str | int] | None:
-        """Если не None, то логировать что саксес старт"""
         resp = await self.session.post(url='https://back.pirate-farm.ink/farming/start')
         return (await resp.json()) if resp.status == HTTPStatus.CREATED else None
 
     async def claim_info(self) -> dict[str, str | int]:
-        """клеймить когда «canClaimInSeconds» == 0 и status != completed"""
         resp = await self.session.get(url='https://back.pirate-farm.ink/farming/get-latest')
         return await resp.json()
 
     async def task_list(self) -> list[dict[str, str | int | bool]]:
-        """Проходиться по каждому и если completed = false - выполнять"""
         resp = await self.session.get(url='https://back.pirate-farm.ink/tasks/list')
         return await resp.json()
 
@@ -60,7 +57,6 @@ class PirateSlot:
         return (await resp.json()) if resp.status == HTTPStatus.CREATED else None
 
     async def play_game(self, bet: int, currency: str = "pir") -> tuple[str, str]:
-        """Если reward = 0 - логировать что lose"""
         resp = await self.session.post(url='https://back.pirate-farm.ink/games/create-game',
                                        json={'bet': f'{bet:.2f}', 'currency': currency})
         resp_json = await resp.json()
@@ -71,7 +67,7 @@ class PirateSlot:
         query = await self.get_tg_web_data()
 
         if query is None:
-            logger.error(f"{self.session_name} | Session {self.account} invalid")
+            logger.error(f"{self.session_name} | Session {self.session_name} invalid")
             await self.logout()
             return None
 
@@ -101,5 +97,4 @@ class PirateSlot:
             return f"query_id={query_id}&user={user}&auth_date={auth_date}&hash={hash_}"
 
         except Exception as error:
-            raise error
             return None
