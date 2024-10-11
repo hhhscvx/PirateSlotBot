@@ -53,7 +53,7 @@ async def start(tg_client: Client, proxy: str | None = None) -> NoReturn:
             if config.PLAY_GAME:
                 me = await pirateslot.get_me()
                 while True:
-                    if pir_balance := float(me['pirBalance']) < config.MINIMAL_PIR_BALANCE:
+                    if (pir_balance := float(me['pirBalance'])) < config.MINIMAL_PIR_BALANCE:
                         sleep_time = random.uniform(*config.SLEEP_BY_LOW_PIR)
                         logger.info(f"{session_name} | Low Game PIR Balance: {pir_balance} | Total: {me['storedPirBalance']} | "
                                     f"Sleep {sleep_time:.1f}s...")
