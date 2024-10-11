@@ -27,6 +27,15 @@ async def start(tg_client: Client, proxy: str | None = None) -> NoReturn:
                     logger.success(f"{session_name} | Claimed +{claimed_amount} PIR")
             elif (seconds_left := claim_info['canClaimInSeconds']) > 0:
                 logger.info(f"{session_name} | Can`t claim yet, {seconds_left} seconds left.")
+            await asyncio.sleep(1)
+
+            claim_info = await pirateslot.claim_info()
+            if claim_info['status'] == 'completed':
+                start_farm = await pirateslot.start()
+                if start_farm is not None:
+                    logger.success(f"{session_name} | Start Farming")
+                await asyncio.sleep(random.uniform(1.5, 3))
+            await asyncio.sleep(1)
 
             # Tasks
             tasks_list = await pirateslot.task_list()
