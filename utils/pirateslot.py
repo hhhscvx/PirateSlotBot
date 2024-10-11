@@ -26,6 +26,9 @@ class PirateSlot:
         }
         self.session = aiohttp.ClientSession(headers=headers, trust_env=True, connector=connector)
 
+    async def logout(self):
+        await self.session.close()
+
     async def get_me(self) -> dict[str, str | int]:
         resp = await self.session.get(url='https://back.pirate-farm.ink/users/me')
         resp_json = await resp.json()
@@ -33,7 +36,7 @@ class PirateSlot:
 
     async def claim(self, claim_id: int) -> tuple[bool, int]:
         resp = await self.session.post(url='https://back.pirate-farm.ink/farming/complete',
-                                       json={'jobId': claim_id})
+                                       json={'farmingJobId': claim_id})
         resp_json: dict = await resp.json()
         success_claimed = resp_json.get('status') == 'completed'
         claimed_amount = resp_json.get('amount')
@@ -97,4 +100,5 @@ class PirateSlot:
             return f"query_id={query_id}&user={user}&auth_date={auth_date}&hash={hash_}"
 
         except Exception as error:
+            raise error
             return None
