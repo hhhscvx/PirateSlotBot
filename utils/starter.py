@@ -70,11 +70,6 @@ async def start(tg_client: Client, proxy: str | None = None) -> NoReturn:
                                        f" {me['pirBalance']} | Total: {me['storedPirBalance']}")
                     await asyncio.sleep(random.uniform(*config.SLEEP_BETWEEN_PLAY))
 
-            await asyncio.sleep(5)
-            break
-
-            ...
-
         except Exception as error:
             logger.error(f"{session_name} | Unknown Error: {error}")
             await asyncio.sleep(delay=3)
